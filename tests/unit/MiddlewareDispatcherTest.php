@@ -1,52 +1,40 @@
 <?php
 
 use Kispiox\Middleware\MiddlewareDispatcher;
-use Kispiox\Middleware\MiddlewareInterface;
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 
-class MiddlewareDispatcherTest extends PHPUnit_Framework_TestCase
+class MiddlewareDispatcherTest extends TestCase
 {
-    public function testConstruct()
-    {
-        $dispatcher = new MiddlewareDispatcher(function () {});
-    }
-
-    /**
-     * @depends testConstruct
-     */
     public function testAdd()
     {
-        $mw = $this->getMock(MiddlewareInterface::class);
+        $final = $this->createMock(MiddlewareInterface::class);
+        $mw = $this->createMock(MiddlewareInterface::class);
 
-        $dispatcher = new MiddlewareDispatcher(function () {});
+        $dispatcher = new MiddlewareDispatcher($mw);
         $return = $dispatcher->add($mw);
 
-        $this->assertInstanceOf(MiddlewareDispatcher::class, $return);
+        $this->assertSame($dispatcher, $return);
     }
 
     /**
-     * @depends testConstruct
+     * @depends testAdd
      */
     public function testDispatch()
     {
-        $req = $this->getMock(ServerRequestInterface::class);
+        $req = $this->createMock(ServerRequestInterface::class);
+        $res = $this->createMock(ResponseInterface::class);
 
-        $res = $this->getMock(ResponseInterface::class);
-
-        $mw = $this->getMock(MiddlewareInterface::class);
-        $mw
-            ->expects($this->once())
+        $mw = $this->createMock(MiddlewareInterface::class);
+        $mw->expects($this->once())
             ->method('process')
             ->with($req)
             ->willReturn($res);
 
-        $dispatcher = new MiddlewareDispatcher($mw);
-
-        $response = $dispatcher->dispatch($req);
-
-        $this->assertEquals($response, $res);
+        $response = (new MiddlewareDispatcher($mw))->dispatch($req);
+        $this->assertEquals($res, $response);
     }
 }
 

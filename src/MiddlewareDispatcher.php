@@ -1,10 +1,24 @@
 <?php
 
+/**
+ * kispiox/middleware - A middleware library for Kispiox
+ * github.com/kispiox/middleware
+ *
+ * MiddlewareDispatcher.php
+ * @copyright Copyright (c) 2018 Matt Ferris
+ * @author Matt Ferris <matt@bueller.ca>
+ *
+ * Licensed under BSD 2-clause license
+ * github.com/kispiox/middleware/blob/master/LICENSE
+ */
+
 namespace Kispiox\Middleware;
 
+use Kispiox\Middleware\Handlers\CallableHandler;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use UnexpectedValueException;
 
 class MiddlewareDispatcher implements MiddlewareDispatcherInterface
 {
@@ -22,7 +36,7 @@ class MiddlewareDispatcher implements MiddlewareDispatcherInterface
      * @param MiddlewareInterface $final
      * @param MiddlewareInterface[] $middleware
      */
-    public function __construct(MiddlewareInterface $final, array $middleware = [])
+    public function __construct(MiddlewareInterface $final = null, array $middleware = [])
     {
         $this->final = $final;
         $this->middleware = $middleware;
@@ -45,7 +59,7 @@ class MiddlewareDispatcher implements MiddlewareDispatcherInterface
     public function dispatch(ServerRequestInterface $request)
     {
         $first = $this->get(0);
-        return $first($request, null);
+        return $first($request);
     }
 
     /**
@@ -54,26 +68,31 @@ class MiddlewareDispatcher implements MiddlewareDispatcherInterface
      */
     public function get($pos)
     {
+        $mc = count($this->middleware);
         $middleware = null;
         $next = function () {};
 
         if (isset($this->middleware[$pos])) {
             $middleware = $this->middleware[$pos];
-        } elseif ($pos == count($this->middleware) + 1) {
+        } elseif (isset($this->final) && ($mc == 0 || $pos > $mc)) {
             $middleware = $this->final;
         } else {
             return $next;
         }
 
-        if (!is_callable($middleware)) {
+        if (is_callable($middleware)) {
+            $middleware = new CallableHandler($middleware);
+        }
+
+        if (!($middleware instanceof MiddlewareInterface)) {
             throw new UnexpectedValueException(
-                'middleware item at position '.$pos.' is not callable'
+                'middleware must implement '.MiddlewareInterface::class
             );
         }
 
-        $next = function (ServerRequestInterface $request) use ($middleware, $pos) {
+        $next = new CallableHandler(function (ServerRequestInterface $request) use ($middleware, $pos) {
             return $middleware->process($request, $this->get($pos+1));
-        };
+        });
 
         return $next;
     }
