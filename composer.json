@@ -1,0 +1,23 @@
+{
+    "name": "kispiox/middleware",
+    "description": "A middleware component for Kispiox",
+    "license": "BSD-2-Clause",
+    "autoload": {
+        "psr-4": {
+            "Kispiox\\Middleware\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Matt Ferris",
+            "email": "matt@bueller.ca"
+        }
+    ],
+    "require": {
+        "psr/http-server-handler": "^1.0",
+        "psr/http-server-middleware": "^1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.5"
+    }
+}
