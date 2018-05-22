@@ -4,8 +4,77 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ed385374dc0dea4c6db7f41cb25ba585",
+    "content-hash": "71ff6d9bdfc1dad07780864d9bc77292",
     "packages": [
+        {
+            "name": "mattferris/events",
+            "version": "0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mattferris/events.git",
+                "reference": "aff8f983c9465ef43cd8b15f6736aa0a013f9a71"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mattferris/events/zipball/aff8f983c9465ef43cd8b15f6736aa0a013f9a71",
+                "reference": "aff8f983c9465ef43cd8b15f6736aa0a013f9a71",
+                "shasum": ""
+            },
+            "require": {
+                "mattferris/provider": "~0.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MattFerris\\Events\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Matt Ferris",
+                    "email": "matt@bueller.ca"
+                }
+            ],
+            "description": "An event dispatcher",
+            "time": "2017-01-05T22:18:28+00:00"
+        },
+        {
+            "name": "mattferris/provider",
+            "version": "0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mattferris/provider.git",
+                "reference": "198802c8bfddb011f9fcfd5d0bde1aa3d9ed8cbf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mattferris/provider/zipball/198802c8bfddb011f9fcfd5d0bde1aa3d9ed8cbf",
+                "reference": "198802c8bfddb011f9fcfd5d0bde1aa3d9ed8cbf",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MattFerris\\Provider\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Matt Ferris",
+                    "email": "matt@bueller.ca"
+                }
+            ],
+            "description": "Implementation standard for consumer/provider interfaces",
+            "time": "2017-01-04T00:47:25+00:00"
+        },
         {
             "name": "psr/http-message",
             "version": "1.0.1",

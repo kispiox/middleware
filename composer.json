@@ -14,6 +14,7 @@
         }
     ],
     "require": {
+        "mattferris/events": "~0.4",
         "psr/http-server-handler": "^1.0",
         "psr/http-server-middleware": "^1.0"
     },

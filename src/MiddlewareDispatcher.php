@@ -49,6 +49,7 @@ class MiddlewareDispatcher implements MiddlewareDispatcherInterface
     public function add(MiddlewareInterface $middleware)
     {
         $this->middleware[] = $middleware;
+        DomainEvents::dispatch(new MiddlewareAddedEvent($middleware));
         return $this;
     }
 
@@ -91,7 +92,9 @@ class MiddlewareDispatcher implements MiddlewareDispatcherInterface
         }
 
         $next = new CallableHandler(function (ServerRequestInterface $request) use ($middleware, $pos) {
-            return $middleware->process($request, $this->get($pos+1));
+            $return = $middleware->process($request, $this->get($pos+1));
+            DomainEvents::dispatch(new MiddlewareHandledRequestEvent($middleware, $request, $return));
+            return $return;
         });
 
         return $next;
